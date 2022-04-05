@@ -2,6 +2,7 @@ package com.example.clients_service.controllers;
 
 import com.example.clients_service.models.Client;
 import com.example.clients_service.models.Client.Gender;
+import com.example.clients_service.models.Phone;
 import com.example.clients_service.services.data.ClientService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -25,11 +27,10 @@ public class MainController {
     @GetMapping("/")
     public String main(Model model){
         List<Client> clients = clientService.findAll();
-        if(!clients.isEmpty()){
-            Client client = clients.get(0);
-            System.out.println(client.getSurname());
-        }
 
+        clients.sort(Comparator.comparingLong(Client::getId));
+        clients.sort(Comparator.comparingLong(Client::getId).reversed());
+        clients.sort(Comparator.comparingLong(Client::getId));
         model.addAttribute("clients", clients);
         return "main";
     }
@@ -52,7 +53,7 @@ public class MainController {
                 DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         System.err.println(gender);
         LocalDate date = LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        Client client = new Client(0L, null, name, patronymic, date, email, gender);
+        Client client = new Client(0L, null, name, patronymic, date, email, gender, null);
         clientService.save(client);
 
 

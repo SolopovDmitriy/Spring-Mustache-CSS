@@ -18,5 +18,9 @@ public class Phone {
     @Column(nullable = false, length = 16)
     private String phone;
 
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_id")
+    private Client client;
     
 }

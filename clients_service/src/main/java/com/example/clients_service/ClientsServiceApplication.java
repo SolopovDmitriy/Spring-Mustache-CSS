@@ -10,6 +10,7 @@ import com.example.clients_service.services.data.AccountService;
 import com.example.clients_service.services.data.ClientService;
 import com.example.clients_service.services.data.PhoneService;
 import com.example.clients_service.services.data.qualifiers.ClientServiceQualifier;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -22,11 +23,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.event.EventListener;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class ClientsServiceApplication extends SpringBootServletInitializer {
-
-    
 
 
     public static void main(String[] args) {
@@ -53,7 +54,7 @@ public class ClientsServiceApplication extends SpringBootServletInitializer {
     private PhoneService phoneService;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void applicationReade() {
+    public void applicationReade() throws Exception {
         // ----------------------------------
         /*System.out.println(clientRepository);
         List<Client> clients = Arrays.asList(
@@ -119,6 +120,22 @@ public class ClientsServiceApplication extends SpringBootServletInitializer {
         // phoneRepository.save(phone1);
 
 
+
+        Client c1 = new Client(1L, "S2", "N2", "P2", LocalDate.now(),
+                "admin@domain.com", Client.Gender.FEMALE, null);
+        clientService.save(c1);
+
+
+        Phone phone1 = new Phone(1L, "12345432", c1);
+        phoneService.save(phone1);
+
+
+        Client client = clientService.findByEmail("admin@domain.com");
+        // Hibernate.initialize(client.getPhones());
+        // Phone phone2 = client.getPhones().iterator().next();
+//        System.out.println("hello");
+        System.out.println(client.getSurname());
+        System.out.println(client.getPhones().size());
 
     }
 

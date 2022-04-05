@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Setter
 @NoArgsConstructor
@@ -46,6 +47,10 @@ public class Client {
         return this.gender;
     }
 
+    public Set<Phone> getPhones() {
+        return phones;
+    }
+
     public enum Gender{
         MALE, FEMALE, OTHER
     }
@@ -71,5 +76,9 @@ public class Client {
     @Column
     private Gender gender;
 
+
+
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Phone> phones;
     
 }

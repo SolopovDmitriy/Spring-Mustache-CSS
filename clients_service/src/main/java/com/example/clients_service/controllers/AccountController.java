@@ -1,5 +1,7 @@
 package com.example.clients_service.controllers;
 
+import com.example.clients_service.models.Account;
+import com.example.clients_service.models.Client;
 import com.example.clients_service.models.Phone;
 import com.example.clients_service.services.data.AccountService;
 import com.example.clients_service.services.data.PhoneService;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -18,18 +21,22 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/account")
-    public String phone(Model model){
-       //  List<Phone> phones = phoneService.findAll();
-       //  model.addAttribute("phones", phones);
+    @GetMapping("/accounts")
+    public String account(Model model){
+        List<Account> accounts = accountService.findAll();
+        accounts.sort(Comparator.comparingLong(Account::getId));
+        accounts.sort(Comparator.comparingLong(Account::getId).reversed());
+        accounts.sort(Comparator.comparingLong(Account::getId));
+        model.addAttribute("accounts", accounts);
         return "account";
     }
 
 
-//    @PostMapping("add_phone")
-//    public String addPhone(Model model, @RequestParam("phone")String phone){
-//        Phone phone1 = new Phone(0L, phone);
-//        phoneService.save(phone1);
-//        return "redirect:/phones";
-//    }
+    @PostMapping("add_account")
+    public String addPhone(Model model, String amount){
+        Account account = new Account(0L, Integer.parseInt(amount));
+        accountService.save(account);
+        return "redirect:/accounts";
+    }
+
 }

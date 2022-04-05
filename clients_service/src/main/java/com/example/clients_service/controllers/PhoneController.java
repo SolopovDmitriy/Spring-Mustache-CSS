@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -24,6 +25,9 @@ public class PhoneController {
     @GetMapping("/phones")
     public String phone(Model model){
         List<Phone> phones = phoneService.findAll();
+        phones.sort(Comparator.comparingLong(Phone::getId));
+        phones.sort(Comparator.comparingLong(Phone::getId).reversed());
+        phones.sort(Comparator.comparingLong(Phone::getId));
         model.addAttribute("phones", phones);
         return "phone";
     }
@@ -31,7 +35,7 @@ public class PhoneController {
 
     @PostMapping("add_phone")
     public String addPhone(Model model, @RequestParam("phone")String phone){
-        Phone phone1 = new Phone(0L, phone);
+        Phone phone1 = new Phone(0L, phone, null);
         phoneService.save(phone1);
         return "redirect:/phones";
     }
